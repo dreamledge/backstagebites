@@ -739,7 +739,8 @@
   <div class="side-menu" id="sideMenu">
     <button class="side-menu-close" id="sideMenuClose">&times;</button>
     <ul>
-      <li><a href="#">Menu</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
       <li><a href="#">Order</a></li>
       <li><a href="#">Join the List</a></li>
     </ul>
@@ -778,8 +779,8 @@
 
     <section class="makeshift-window">
       <div class="reveal">
-        <div class="section-overline accent-gold">Behind the Scenes</div>
-        <h2 class="section-title">The Makeshift <span class="gradient-text-fire">Window</span></h2>
+        <div class="section-overline accent-gold">The Full Menu</div>
+        <h2 class="section-title">What's on the <span class="gradient-text-fire">Set List</span></h2>
         <p class="section-desc">A glimpse into the chaos and magic that happens before the plate hits the table. This is
           where the real flavor comes together.</p>
       </div>
@@ -863,7 +864,7 @@
 
     <footer class="footer">
       <ul class="footer-links">
-        <li><a href="#">Menu</a></li>
+      <li><a href="menu.html">Menu</a></li>
         <li><a href="#">Reservations</a></li>
         <li><a href="#">Our Story</a></li>
         <li><a href="#">Gallery</a></li>
@@ -1002,7 +1003,16 @@
     hamburger.addEventListener('click', () => toggleMenu(true));
     sideMenuOverlay.addEventListener('click', () => toggleMenu(false));
     sideMenuClose.addEventListener('click', () => toggleMenu(false));
-    sideMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggleMenu(false)));
+    sideMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const href = a.getAttribute('href');
+        toggleMenu(false);
+        if (href && href !== '#') {
+          e.preventDefault();
+          window.location.href = href;
+        }
+      });
+    });
   </script>
 </body>
 
