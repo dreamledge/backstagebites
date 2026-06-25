@@ -192,40 +192,45 @@
 
     .scroll-indicator {
       position: absolute;
-      bottom: 40px;
+      bottom: 32px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      color: rgba(237, 232, 223, .4);
-      font-size: 10px;
-      letter-spacing: 2px;
+      gap: 10px;
+      color: rgba(237, 232, 223, .85);
+      font-size: 11px;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      opacity: 1
+      opacity: 1;
+      animation: glowBounce 2.4s ease-in-out infinite
     }
 
     .scroll-indicator .arrow {
-      width: 18px;
-      height: 18px;
-      border-right: 1.5px solid rgba(237, 232, 223, .3);
-      border-bottom: 1.5px solid rgba(237, 232, 223, .3);
+      width: 20px;
+      height: 20px;
+      border-right: 2px solid rgba(237, 232, 223, .5);
+      border-bottom: 2px solid rgba(237, 232, 223, .5);
       transform: rotate(45deg);
-      animation: floatArrow 2s ease-in-out infinite
+      animation: arrowPulse 2.4s ease-in-out infinite
     }
 
-    @keyframes floatArrow {
-
-      0%,
-      100% {
-        opacity: .4
+    @keyframes glowBounce {
+      0%, 100% {
+        filter: drop-shadow(0 0 5px rgba(237, 232, 223, 0.25));
+        transform: translateX(-50%) translateY(0)
       }
-
       50% {
-        opacity: 1
+        filter: drop-shadow(0 0 15px rgba(237, 232, 223, 0.55));
+        transform: translateX(-50%) translateY(-7px)
       }
+    }
+
+    @keyframes arrowPulse {
+      0%, 100% { opacity: .5 }
+      50% { opacity: 1 }
     }
 
     .site-content {
@@ -268,14 +273,15 @@
     }
 
     .section-overline {
-      display: inline-block;
+      display: block;
+      width: fit-content;
+      margin: 0 auto 16px;
       padding: 4px 12px;
       border-radius: 3px;
       font-size: 10px;
       letter-spacing: 2px;
       text-transform: uppercase;
       font-weight: 700;
-      margin-bottom: 16px;
       border: 1px solid rgba(237, 232, 223, .1);
       background: rgba(237, 232, 223, .04)
     }
@@ -464,37 +470,32 @@
       color: rgba(237, 232, 223, .85)
     }
 
-    .stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-      margin: 24px auto 0;
-      max-width: 600px;
-      justify-content: center
+    .backstage-pass-wrap {
+      margin: 32px auto 0;
+      width: 200px;
+      height: 200px;
+      position: relative;
+      background-color: #141210;
+      background-image: url(icon/backstagepass.png);
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-blend-mode: screen;
+      opacity: 0;
+      transform: translateY(-80px) rotate(-8deg) scale(0.7);
+      transition: none
     }
 
-    .stat {
-      text-align: center;
-      flex: 1;
-      min-width: 100px
+    .backstage-pass-wrap.animate {
+      animation: fallLand .8s cubic-bezier(.22,.68,.4,1) forwards
     }
 
-    .stat-num {
-      font-size: 28px;
-      font-weight: 900;
-      background: linear-gradient(135deg, #ede8df, #d4a635);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1
-    }
-
-    .stat-label {
-      font-size: 10px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: rgba(237, 232, 223, .35);
-      margin-top: 6px
+    @keyframes fallLand {
+      0% { opacity: 0; transform: translateY(-120px) rotate(-12deg) scale(0.5) }
+      35% { opacity: 1; transform: translateY(8px) rotate(2deg) scale(1.04) }
+      55% { transform: translateY(-4px) rotate(-1deg) scale(0.97) }
+      75% { transform: translateY(2px) rotate(0deg) scale(1.01) }
+      100% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1) }
     }
 
     .btn-row {
@@ -611,9 +612,6 @@
         padding-right: 0
       }
 
-      .stats {
-        gap: 48px
-      }
     }
 
     @media(min-width:1024px) {
@@ -661,24 +659,7 @@
         <p class="section-desc">A delivery-only food brand built for the moments when regular food doesn't hit right.
           Late studio sessions. Movie nights. Game days. Group orders. After-hours hunger.<br /><br />Real pizza. Big
           wings. Loaded sides. Inspired by New York and Philadelphia. Built for Dubai.</p>
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-num">4.9</div>
-            <div class="stat-label">Star Rating</div>
-          </div>
-          <div class="stat">
-            <div class="stat-num">50+</div>
-            <div class="stat-label">Dish Selection</div>
-          </div>
-          <div class="stat">
-            <div class="stat-num">15</div>
-            <div class="stat-label">Years Legacy</div>
-          </div>
-          <div class="stat">
-            <div class="stat-num">3</div>
-            <div class="stat-label">Michelin Stars</div>
-          </div>
-        </div>
+        <div class="backstage-pass-wrap"></div>
       </div>
     </section>
 
@@ -879,6 +860,19 @@
       });
     }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
     revealEls.forEach(el => observer.observe(el));
+
+    const passWrap = document.querySelector('.backstage-pass-wrap');
+    if (passWrap) {
+      const passObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+            passObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+      passObserver.observe(passWrap);
+    }
   </script>
 </body>
 
