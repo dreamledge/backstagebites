@@ -571,6 +571,53 @@
       padding-bottom: 0
     }
 
+    .backstage-form {
+      max-width: 520px;
+      margin: 32px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .backstage-form input,
+    .backstage-form select,
+    .backstage-form textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(237, 232, 223, .12);
+      background: rgba(237, 232, 223, .04);
+      color: #ede8df;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      outline: none;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+      appearance: none
+    }
+
+    .backstage-form input::placeholder,
+    .backstage-form textarea::placeholder {
+      color: rgba(237, 232, 223, .3)
+    }
+
+    .backstage-form input:focus,
+    .backstage-form select:focus,
+    .backstage-form textarea:focus {
+      border-color: rgba(237, 232, 223, .3)
+    }
+
+    .backstage-form select option {
+      background: #141210;
+      color: #ede8df
+    }
+
+    .backstage-form textarea {
+      resize: vertical;
+      min-height: 80px
+    }
+
     .makeshift-window .frame-item .tag {
       font-size: 9px;
       letter-spacing: 2px;
@@ -683,10 +730,70 @@
       margin-top: 24px
     }
 
+    .brands-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 32px;
+      justify-content: center;
+      align-items: center
+    }
+
+    .brand-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 180px;
+      height: 80px;
+      background: rgba(237, 232, 223, .04);
+      border: 1px solid rgba(237, 232, 223, .08);
+      border-radius: 12px;
+      text-decoration: none;
+      padding: 16px 20px;
+      transition: background .3s, border-color .3s, transform .2s
+    }
+
+    .brand-card:active {
+      background: rgba(237, 232, 223, .08);
+      border-color: rgba(237, 232, 223, .15);
+      transform: scale(.97)
+    }
+
+    .brand-card--with-label {
+      flex-direction: column;
+      gap: 4px;
+      padding: 12px 20px 10px
+    }
+
+    .brand-card--with-label img {
+      height: calc(100% - 18px)
+    }
+
+    .brand-label {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(237, 232, 223, .45);
+      line-height: 1;
+      text-align: center
+    }
+
+    .brand-card svg,
+    .brand-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none
+    }
+
     @media(min-width:768px) {
       .nav {
         padding: 20px 40px 20px 20px
       }
+
+      .brands-row { gap: 20px }
+      .brand-card { width: 200px; height: 90px }
 
       .scroll-video-content .sub {
         font-size: 16px
@@ -807,19 +914,29 @@
       <a href="menu.html" style="display:block;text-decoration:none"><img src="icon/venueentrance.png" alt="Venue Entrance" class="reveal" style="display:block;width:100%;max-width:900px;margin:0 auto;border-radius:16px" /></a>
     </section>
 
-    <section class="gradient-2">
-      <div class="reveal">
-        <div class="section-overline accent-gold">Signature</div>
-        <h2 class="section-title">We're <span class="gradient-text-warm">Live.</span></h2>
-        <p class="section-desc">Backstage Bites is officially open. Hit the button, place your order. JBR &amp; Arjan kitchens are firing. Tonight's dinner sorted.</p>
-        <div class="btn-row" style="margin-top:32px">
-          <a href="https://deliveroo.ae/en/menu/dubai/south-barsha-arjan/back-satge-bites-arjan" class="btn btn-primary" target="_blank" rel="noopener">Order – Arjan</a>
-          <a href="https://deliveroo.ae/en/menu/dubai/jbr/back-satge-bites-marina" class="btn btn-primary" target="_blank" rel="noopener">Order – JBR</a>
-          <a href="https://www.talabat.com/uae" class="btn btn-primary" target="_blank" rel="noopener">Talabat</a>
-          <a href="https://www.careem.com/en-AE/food/" class="btn btn-primary" target="_blank" rel="noopener">Careem Food</a>
+      <section class="gradient-2">
+        <div class="reveal">
+          <div class="section-overline accent-gold">Order Right Now</div>
+          <h2 class="section-title">We're <span class="gradient-text-warm">Live.</span></h2>
+          <p class="section-desc">Backstage Bites is officially open. Order straight from your go-to app. JBR &amp; Arjan kitchens are firing — tonight's dinner sorted.</p>
+          <div class="brands-row">
+            <a href="https://deliveroo.ae/en/menu/dubai/south-barsha-arjan/back-satge-bites-arjan" class="brand-card brand-card--with-label deliveroo" target="_blank" rel="noopener">
+              <img src="icon/deliveroo-logo.svg" alt="Order on Deliveroo" />
+              <span class="brand-label">Arjan</span>
+            </a>
+            <a href="https://deliveroo.ae/en/menu/dubai/jbr/back-satge-bites-marina" class="brand-card brand-card--with-label deliveroo" target="_blank" rel="noopener">
+              <img src="icon/deliveroo-logo.svg" alt="Order on Deliveroo – JBR" />
+              <span class="brand-label">Marina</span>
+            </a>
+            <a href="https://www.talabat.com/uae" class="brand-card talabat" target="_blank" rel="noopener">
+              <img src="icon/talabat-logo.svg" alt="Order on Talabat" />
+            </a>
+            <a href="https://www.careem.com/en-AE/food/" class="brand-card careem" target="_blank" rel="noopener">
+              <img src="icon/careem-logo.svg" alt="Order on Careem Food" />
+            </a>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
     <section class="gradient-3">
       <div class="reveal">
@@ -837,20 +954,27 @@
 
     <section class="gradient-4">
       <div class="reveal">
-        <div class="section-overline accent-gold">Contact</div>
-        <h2 class="section-title">Find the <span class="gradient-text-warm">Door</span></h2>
-        <p class="section-desc">No sign out front. No reservations online. Call the number. Say the password. We'll keep
-          the light on.</p>
-        <div class="frame"
-          style="margin-top:24px;padding:24px;border-radius:12px;background:rgba(237,232,223,.03);border:1px solid rgba(237,232,223,.06);max-width:460px;margin-left:auto;margin-right:auto;text-align:center">
-          <p style="font-size:13px;color:rgba(237,232,223,.4);font-weight:300;margin-bottom:8px">📍 42 Venue Lane,
-            Basement Level</p>
-          <p style="font-size:13px;color:rgba(237,232,223,.4);font-weight:300;margin-bottom:8px">📞 (555) 867-5309</p>
-          <p style="font-size:13px;color:rgba(237,232,223,.4);font-weight:300">🕐 Wed–Sun · 7pm – 2am</p>
-        </div>
-        <div class="btn-row">
-          <a href="#" class="btn btn-primary">Make a Reservation</a>
-          <a href="#" class="btn btn-secondary">View Full Menu</a>
+        <div class="section-overline accent-gold">Join the</div>
+        <h2 class="section-title">Backstage <span class="gradient-text-warm">List</span></h2>
+        <p class="section-desc">Be first in line when we drop. Waitlist members get exclusive offers, secret menu access, and first-order discounts before anyone else.</p>
+        <div class="backstage-form">
+          <input type="text" id="bb-name" placeholder="First &amp; Last Name" />
+          <input type="tel" id="bb-whatsapp" placeholder="WhatsApp Number" />
+          <input type="email" id="bb-email" placeholder="Email Address" />
+          <select id="bb-area">
+            <option value="" disabled selected>Area of Dubai</option>
+            <option value="Arjan">Arjan</option>
+            <option value="Barsha">Barsha</option>
+            <option value="Downtown">Downtown</option>
+            <option value="Dubai Marina">Dubai Marina</option>
+            <option value="JBR">JBR</option>
+            <option value="JLT">JLT</option>
+            <option value="Palm Jumeirah">Palm Jumeirah</option>
+            <option value="Sheikh Zayed Road">Sheikh Zayed Road</option>
+            <option value="Other">Other</option>
+          </select>
+          <textarea id="bb-want" placeholder="What would you like on the menu?"></textarea>
+          <button class="btn btn-primary" onclick="submitBackstageList()">Join the Backstage List</button>
         </div>
       </div>
     </section>
@@ -865,10 +989,10 @@
         <li><a href="#">Contact</a></li>
       </ul>
       <div class="footer-social">
-        <a href="#">Instagram</a>
+        <a href="https://www.instagram.com/backstagebites.ae/" target="_blank" rel="noopener">Instagram</a>
         <a href="#">TikTok</a>
         <a href="#">X</a>
-        <a href="#">YouTube</a>
+        <a href="https://www.youtube.com/@AUDIOSWIMPODCAST" target="_blank" rel="noopener">YouTube</a>
       </div>
       <p>Backstage Bites — Where the Real Flavor Happens</p>
       <p class="footer-legal">&copy; 2026 Backstage Bites. All rights reserved.</p>
@@ -1006,6 +1130,22 @@
         }
       });
     });
+
+    function submitBackstageList() {
+      const name = document.getElementById('bb-name').value.trim();
+      const whatsapp = document.getElementById('bb-whatsapp').value.trim();
+      const email = document.getElementById('bb-email').value.trim();
+      const area = document.getElementById('bb-area').value;
+      const want = document.getElementById('bb-want').value.trim();
+
+      if (!name || !whatsapp || !email || !area) {
+        alert('Please fill in your name, WhatsApp number, email, and area.');
+        return;
+      }
+
+      const body = `New Backstage List Signup\n\nName: ${name}\nWhatsApp: ${whatsapp}\nEmail: ${email}\nArea: ${area}\nMenu Wants: ${want || 'Not specified'}`;
+      window.location.href = `mailto:info@backstagebites.ae?subject=Backstage List Signup&body=${encodeURIComponent(body)}`;
+    }
   </script>
 </body>
 
