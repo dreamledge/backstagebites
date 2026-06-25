@@ -332,6 +332,22 @@
       50% { opacity: 1 }
     }
 
+    @keyframes fadePulse {
+      0%, 100% { opacity: .5 }
+      50% { opacity: .9 }
+    }
+
+    @keyframes hintPulse {
+      0%, 100% {
+        filter: drop-shadow(0 0 5px rgba(237, 232, 223, 0.25));
+        transform: translateY(0)
+      }
+      50% {
+        filter: drop-shadow(0 0 15px rgba(237, 232, 223, 0.55));
+        transform: translateY(-7px)
+      }
+    }
+
     .site-content {
       position: relative;
       z-index: 1;
@@ -784,46 +800,23 @@
         <p class="section-desc">A glimpse into the chaos and magic that happens before the plate hits the table. This is
           where the real flavor comes together.</p>
       </div>
-      <div class="frame reveal">
-        <div class="frame-grid">
-          <div class="frame-item">
-            <div class="tag">🔥 The Pass</div>
-            <p>Orders fly. Plates dance. Every dish is a performance.</p>
-          </div>
-          <div class="frame-item">
-            <div class="tag">🥩 The Grill</div>
-            <p>900° flames. Cold beer. Hot steel. Pure alchemy.</p>
-          </div>
-          <div class="frame-item">
-            <div class="tag">🎸 The Booth</div>
-            <p>Where chefs, musicians, and misfits share a meal and a story.</p>
-          </div>
-        </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin:28px auto 12px;animation:hintPulse 2.4s ease-in-out infinite;text-align:center">
+        <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(237,232,223,.85);text-align:center">Press the entrance to see the menu</p>
+        <div style="width:18px;height:18px;border-right:2px solid rgba(237,232,223,.5);border-bottom:2px solid rgba(237,232,223,.5);transform:rotate(45deg);animation:arrowPulse 2.4s ease-in-out infinite"></div>
       </div>
+      <a href="menu.html" style="display:block;text-decoration:none"><img src="icon/venueentrance.png" alt="Venue Entrance" class="reveal" style="display:block;width:100%;max-width:900px;margin:0 auto;border-radius:16px" /></a>
     </section>
 
     <section class="gradient-2">
       <div class="reveal">
         <div class="section-overline accent-gold">Signature</div>
-        <h2 class="section-title">From Our <span class="gradient-text-warm">Pass</span></h2>
-        <p class="section-desc">Handcrafted dishes born from late-night experiments and back-alley inspiration.</p>
-        <div class="cards">
-          <div class="card reveal">
-            <div class="card-icon">🍔</div>
-            <h3>The Headliner</h3>
-            <p>Wagyu double smash, aged cheddar, caramelized onions, secret sauce on a brioche bun that steals the show.
-            </p>
-          </div>
-          <div class="card reveal">
-            <div class="card-icon">🍝</div>
-            <h3>Smoked Truffle Alfredo</h3>
-            <p>Hand-rolled pappardelle, tableside-pecked black truffle, pecorino, and a whisper of peated whiskey.</p>
-          </div>
-          <div class="card reveal">
-            <div class="card-icon">🥃</div>
-            <h3>The Encore</h3>
-            <p>Bacon-fat-washed bourbon, smoked maple, bitter amaro, flamed orange. A standing ovation in a glass.</p>
-          </div>
+        <h2 class="section-title">We're <span class="gradient-text-warm">Live.</span></h2>
+        <p class="section-desc">Backstage Bites is officially open. Hit the button, place your order. JBR &amp; Arjan kitchens are firing. Tonight's dinner sorted.</p>
+        <div class="btn-row" style="margin-top:32px">
+          <a href="https://deliveroo.ae/en/menu/dubai/south-barsha-arjan/back-satge-bites-arjan" class="btn btn-primary" target="_blank" rel="noopener">Order – Arjan</a>
+          <a href="https://deliveroo.ae/en/menu/dubai/jbr/back-satge-bites-marina" class="btn btn-primary" target="_blank" rel="noopener">Order – JBR</a>
+          <a href="https://www.talabat.com/uae" class="btn btn-primary" target="_blank" rel="noopener">Talabat</a>
+          <a href="https://www.careem.com/en-AE/food/" class="btn btn-primary" target="_blank" rel="noopener">Careem Food</a>
         </div>
       </div>
     </section>
