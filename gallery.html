@@ -10,7 +10,7 @@
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html{overflow-x:hidden}
-    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0b0a08;color:#ede8df;-webkit-font-smoothing:antialiased}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0b0a08;color:#ede8df;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 
     .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px 16px 12px;display:flex;align-items:center;justify-content:space-between;background:#0b0a08}
     .nav-logo{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#ede8df}
@@ -34,8 +34,8 @@
     .side-menu-close:active{background:rgba(237,232,223,.08);color:#ede8df}
 
     .page-wrap{padding-top:80px;padding-bottom:60px}
-    .page-title{text-align:center;font-size:clamp(28px,5vw,42px);font-weight:800;letter-spacing:-1px;margin-bottom:8px}
-    .page-sub{text-align:center;font-size:13px;color:rgba(237,232,223,.45);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:40px}
+    .page-title{text-align:center;font-size:clamp(28px,5vw,42px);font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+    .page-sub{text-align:center;font-size:13px;color:rgba(237,232,223,.45);letter-spacing:2px;text-transform:uppercase;margin-bottom:40px}
     .glow-line{width:40px;height:3px;border-radius:2px;background:linear-gradient(90deg,#d4a635,#c9261a);margin:0 auto 16px}
 
     .embed-wrap{max-width:540px;margin:0 auto;padding:0 12px}
@@ -69,7 +69,7 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="menu.html">Menu</a></li>
       <li><a href="gallery.html">Gallery</a></li>
-      <li><a href="#">Order</a></li>
+      <li><a href="index.html#order-now">Order</a></li>
       <li><a href="index.html#join-list">Join the List</a></li>
     </ul>
   </div>
