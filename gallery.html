@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.3.0/dist/dotlottie-wc.js" type="module"></script>
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html{overflow-x:hidden}
@@ -41,6 +42,16 @@
     .embed-wrap{max-width:540px;margin:0 auto;padding:0 12px}
     .embed-wrap .instagram-media{margin:0 auto!important;min-width:auto!important;width:100%!important}
 
+    .modal-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s ease-out}
+    .modal-overlay.open{opacity:1;pointer-events:auto}
+    .modal{background:#141210;border:1px solid rgba(237,232,223,.1);border-radius:16px;width:94%;max-width:420px;max-height:92vh;padding:32px 24px 24px;position:relative;transform:scale(.92) translateY(24px);transition:transform .4s cubic-bezier(.22,.68,.4,1),opacity .35s ease-out .1s;overflow-y:auto;opacity:0}
+    .modal-overlay.open .modal{transform:scale(1) translateY(0);opacity:1}
+    @media(max-width:480px){.modal{width:85%;max-width:380px;height:60vh;border-radius:12px;padding:28px 20px 20px}}
+    .modal-overlay.open .modal{transform:scale(1)}
+    .modal-close{position:absolute;top:12px;right:12px;width:32px;height:32px;background:none;border:none;color:rgba(237,232,223,.4);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:color .2s,background .2s}
+    .modal-close:active{color:#ede8df;background:rgba(237,232,223,.08)}
+    .modal-header{font-size:18px;font-weight:900;letter-spacing:-.3px;margin-bottom:12px;text-align:center;background:linear-gradient(135deg,#ede8df 0%,#d4a635 50%,#c9261a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .modal-body{font-size:14px;color:rgba(237,232,223,.55);line-height:1.7;text-align:center}
     @media(min-width:768px){
       .nav{padding:20px 40px 20px 20px}
       .page-wrap{padding-top:100px}
@@ -71,7 +82,17 @@
       <li><a href="gallery.html">Gallery</a></li>
       <li><a href="index.html#order-now">Order</a></li>
       <li><a href="index.html#join-list">Join the List</a></li>
+      <li><a href="#" id="backstageBotLink">Backstage Bot</a></li>
     </ul>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div class="modal-header">Backstage Bot</div>
+      <div class="modal-body">Ask me anything about Backstage Bites.</div>
+      <dotlottie-player src="icon/biteslottie.lottie" autoplay loop style="width:120px;height:120px;margin:20px auto 0"></dotlottie-player>
+    </div>
   </div>
 
   <div class="page-wrap">
@@ -110,6 +131,28 @@
           window.location.href = href;
         }
       });
+    });
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalClose = document.getElementById('modalClose');
+
+    document.getElementById('backstageBotLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleMenu(false);
+      modalOverlay.classList.add('open');
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    });
+
+    function closeModal() {
+      modalOverlay.classList.remove('open');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
     });
   </script>
 </body>
