@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
   <title>Set List — Backstage Bites</title>
+  <script>history.scrollRestoration='manual';window.addEventListener('pageshow',function(e){document.querySelector('meta[name=viewport]').content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no';window.scrollTo(0,0);if(e.persisted)setTimeout(function(){window.scrollTo(0,0)},50)});window.addEventListener('load',function(){window.scrollTo(0,0)});window.addEventListener('unload',function(){})</script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.3.0/dist/dotlottie-wc.js" type="module"></script>
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    html{overflow-x:hidden}
+    html{overflow-x:hidden;touch-action:pan-x pan-y}
     body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#0b0a08;color:#ede8df;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 
     .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px 16px 12px;display:flex;align-items:center;justify-content:space-between;background:#0b0a08}
@@ -40,8 +40,7 @@
     .modal-overlay.open{opacity:1;pointer-events:auto}
     .modal{background:#141210;border:1px solid rgba(237,232,223,.1);border-radius:16px;width:94%;max-width:420px;max-height:92vh;padding:32px 24px 24px;position:relative;transform:scale(.92) translateY(24px);transition:transform .4s cubic-bezier(.22,.68,.4,1),opacity .35s ease-out .1s;overflow-y:auto;opacity:0}
     .modal-overlay.open .modal{transform:scale(1) translateY(0);opacity:1}
-    @media(max-width:480px){.modal{width:85%;max-width:380px;height:60vh;border-radius:12px;padding:28px 20px 20px}}
-    .modal-overlay.open .modal{transform:scale(1)}
+    @media(max-width:480px){.modal{width:88%;max-width:400px;height:auto;border-radius:12px;padding:20px 16px 16px}.modal-header{margin-bottom:6px}.modal-body{margin-bottom:0}}
     .modal-close{position:absolute;top:12px;right:12px;width:32px;height:32px;background:none;border:none;color:rgba(237,232,223,.4);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:color .2s,background .2s}
     .modal-close:active{color:#ede8df;background:rgba(237,232,223,.08)}
     .modal-header{font-size:18px;font-weight:900;letter-spacing:-.3px;margin-bottom:12px;text-align:center;background:linear-gradient(135deg,#ede8df 0%,#d4a635 50%,#c9261a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -80,8 +79,14 @@
     <div class="modal" id="modal">
       <button class="modal-close" id="modalClose">&times;</button>
       <div class="modal-header">Backstage Bot</div>
-      <div class="modal-body">Ask me anything about Backstage Bites.</div>
-      <dotlottie-player src="icon/biteslottie.lottie" autoplay loop style="width:120px;height:120px;margin:20px auto 0"></dotlottie-player>
+      <div class="modal-body" id="botStatus">Ask me anything about Backstage Bites.</div>
+      <button id="pttButton" style="display:block;margin:16px auto 0;padding:0;border:none;background:none;cursor:pointer;line-height:0;border-radius:8px;transition:transform .12s ease"><img src="icon/bitessiri.svg" alt="" style="display:block;width:120px;height:120px;opacity:.6" /></button>
+      <div id="randomPicker" style="display:none;flex-direction:column;align-items:center;justify-content:center;width:120px;height:120px;margin:16px auto 0;border-radius:8px;background:rgba(237,232,223,.04)"><div id="rpDisplay" style="font-size:13px;font-weight:600;color:#d4a635;text-align:center;line-height:1.3;padding:0 8px"></div><div id="rpResult" style="font-size:13px;font-weight:700;color:#c9261a;text-align:center;margin-top:6px;opacity:0;transition:opacity .3s"></div></div>
+      <div style="display:flex;gap:8px;margin-top:12px;align-items:stretch" id="textInputRow">
+        <input type="text" id="chatInput" placeholder="Type your question..." style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid rgba(237,232,223,.12);background:rgba(237,232,223,.04);color:#ede8df;font-family:'Inter',sans-serif;font-size:17px;outline:none;touch-action:manipulation" />
+        <button id="chatSendBtn" style="padding:10px 16px;border-radius:8px;border:none;background:linear-gradient(135deg,#d4a635,#c9261a);color:#fff;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer">Send</button>
+      </div>
+      <audio id="botAudio" preload="none" style="display:none"></audio>
     </div>
   </div>
 
@@ -137,6 +142,338 @@
     modalOverlay.addEventListener('click', (e) => {
       if (e.target === modalOverlay) closeModal();
     });
+
+    const pttBtn = document.getElementById('pttButton');
+    const botStatus = document.getElementById('botStatus');
+    const botAudio = document.getElementById('botAudio');
+    let recognition = null;
+    let isListening = false;
+    let finalTranscript = '';
+
+    var faq = [
+      { keywords: ['hours','open','time','when','close','24','today'], reply: 'Backstage Bites is open right now, daily for delivery through Deliveroo, Talabat, and Careem Food. Check your app for exact hours in your area.', idx: 0 },
+      { keywords: ['menu','food','serve','sell','item','what','set list'], reply: 'Our set list has starters and sides like Popcorn Chicken, Chicken Tenders, Mozzarella Sticks, Jalapeno Bites, French Fries, and the Barsha Bites sharing combo. Seven pizzas: Margherita, Pepperoni, Chicken Alfredo, Vegetarian, Meat Lover, Truffle Mushroom, and Funghi. Ten chicken wing flavors from Buffalo to Sichuan. Five burgers including Classic Cheeseburger and Burger and Crispy Brisket. Plus desserts and drinks. All halal. Check the Menu page.', idx: 1 },
+      { keywords: ['halal','halaal','certified'], reply: 'Yes, everything at Backstage Bites is 100 percent halal. All our ingredients are halal certified, from the pizza toppings to the chicken wings and sides.', idx: 2 },
+      { keywords: ['order','delivery','deliveroo','talabat','careem','buy','get','app'], reply: 'Order right now on Deliveroo, Talabat, and Careem Food. We have two kitchens in Arjan and JBR Marina. Visit the Order section on our site for direct links to each app.', idx: 3 },
+      { keywords: ['location','where','kitchen','area','dubai','arjan','jbr','marina','barsha','downtown','jlt','palm','road','near'], reply: 'We are a delivery only brand in Dubai. Kitchens in Arjan and JBR Marina deliver to Barsha, Downtown, Dubai Marina, JLT, Palm Jumeirah, and Sheikh Zayed Road.', idx: 4 },
+      { keywords: ['backstage list','waitlist','join','sign up','signup','exclusive','offer','discount','deal','promo','secret','first'], reply: 'Join the Backstage List on our homepage for exclusive offers, secret menu access, and first order discounts before anyone else. Sign up with your name, WhatsApp, email, and area.', idx: 5 },
+      { keywords: ['story','backstory','concept','about','who','start','begin','born','history'], reply: 'Backstage Bites was born from the streets of Philadelphia and New York, mixed with music and culture. A delivery only brand for late studio sessions, movie nights, and after hours hunger. Every plate tells a story.', idx: 6 },
+      { keywords: ['instagram','social','media','follow','gallery','photo','picture','tag'], reply: 'Follow us on Instagram @backstagebites.ae for fresh photos, behind the scenes content, and updates. Check our Gallery page for the full Instagram feed.', idx: 7 },
+      { keywords: ['contact','email','reach','call','phone','support','info'], reply: 'Email us at info@backstagebites.ae. Follow us on Instagram @backstagebites.ae for the fastest updates and replies.', idx: 8 },
+      { keywords: ['cost','price','pricing','expensive','afford','cost','fee','charge','dirham','aed','cheap','how much'], reply: 'Our pricing is competitive for premium halal pizza, wings, and loaded sides in Dubai. Check Deliveroo, Talabat, or Careem for current prices and meal deals in your area.', idx: 9 },
+      { keywords: ['name','why backstage','meaning','brand','calling','called'], reply: 'Backstage Bites reflects our roots in music and culture. The food that happens behind the scenes, backstage, where the real flavor comes together before the main event.', idx: 10 },
+      { keywords: ['hello','hi','hey','help','assist','yo','sup'], reply: 'Hey there. Welcome to Backstage Bites. I am the Backstage Bot. Ask me about the menu, locations, ordering, hours, or the brand. What can I help with?', idx: 11 },
+      { keywords: ['drink','beverage','soda','water','coke','soft','refresh','coca','sprite','fanta','zero'], reply: 'We have Coca-Cola, Sprite, Fanta, Coke Zero, and bottled water. All available a la carte or as part of a burger combo meal.', idx: 12 },
+      { keywords: ['dessert','sweet','desserts','after','cake','cheesecake','honey','profiterole','custard'], reply: 'Our desserts are Honey Cake, layered honey sponge with creamy filling; Cheesecake, velvety on a buttery biscuit base; and Custard Profiteroles, choux puffs with vanilla custard and chocolate drizzle.', idx: 13 },
+      { keywords: ['ingredient','ingredients','fresh','quality','made','prepared','source'], reply: 'We use only fresh, high quality ingredients. Our dough is made daily, wings are slow roasted, and toppings are premium. Everything is halal certified.', idx: 14 },
+      { keywords: ['dietary','diet','gluten','vegan','vegetarian','allergy','allergen','veggie','veg'], reply: 'For vegetarians we have the Vegetarian pizza with seasonal veggies, Mozzarella Sticks, Jalapeno Bites, French Fries, and some desserts. Check the delivery app for full allergen info or email us at info@backstagebites.ae.', idx: 15 },
+      { keywords: ['spiciest','hottest','spicy','heat','habanero','sichuan','fiery'], reply: 'The spiciest item is the Spicy Habanero wings with fiery heat and fruity undertones. For a different kick, try the Sichuan wings with numbing heat and deep aromatic flavour. Both are 8 piece portions.', idx: 16 },
+      { keywords: ['filling','full','biggest','most','large','portion','fill me up','huge','heavy','generous'], reply: 'For the most food, get the Barsha Bites crew combo with fries, mozzarella sticks, and jalapeno bites. Or the Chicken Tenders 6 piece, the Meat Lover pizza loaded with premium halal meats, or any burger combo with fries and a drink.', idx: 17 },
+      { keywords: ['flavor','flavour','wings','wing','buffalo','bbq','honey mustard','parmesan','mango','cajun','korean','soy','ginger','glaze'], reply: 'Our 10 wing flavors are Buffalo Style, Hickory BBQ, Zesty Honey Mustard, Parmesan Punch, Spicy Habanero, Peri Mango, Sichuan, Smoked Spiced, Honey Lime Cajun, and Korean Soy-Ginger. Each 8 pieces, your choice of bone-in or boneless?', idx: 18 },
+      { keywords: ['burger','burgers','cheeseburger','brisket','patty','mushroom','swiss'], reply: 'We have 5 burgers: Classic Cheeseburger with beef, melted cheese, lettuce, tomato, pickles; Mushroom Burger with sauteed mushrooms and melted cheese; Fried Chicken Burger with crispy fillet; Swiss Cheeseburger with caramelized onions; and Burger and Crispy Brisket. All available as a combo with fries and a drink.', idx: 19 },
+      { keywords: ['side','sides','starter','starters','appetizer','popcorn','tender','mozzarella','jalapeno','jalapeño','fries'], reply: 'Starters and sides: Popcorn Chicken with fries and dipping sauce; Chicken Tenders 3 or 6 piece; Mozzarella Sticks 5 piece; Jalapeno Bites 5 piece; French Fries; and the Barsha Bites sharing combo with fries, mozz sticks, and jalapenos. All come with dipping sauces.', idx: 20 },
+      { keywords: ['pizza','pizzas','margherita','pepperoni','alfredo','meat lover','truffle','mushroom','funghi','topping'], reply: 'Our 7 pizzas: Margherita with fresh mozzarella and basil; Pepperoni with beef pepperoni and chili flakes; Chicken Alfredo with creamy Alfredo sauce; Vegetarian with seasonal veggies; Meat Lover with premium halal meats; Truffle Mushroom with truffle oil and sauteed mushrooms; and Funghi with mixed mushrooms on a garlic herb base.', idx: 21 },
+      { keywords: ['combo','combos','meal','deal','barsha','bites','share','sharing','platter'], reply: 'All burgers are available as combos with fries and a drink. The Barsha Bites is our signature sharing combo with fries, mozzarella sticks, and jalapeno bites. Wings come 8 pieces per order with your choice of sauce.', idx: 22 },
+      { keywords: ['sauce','sauces','dip','dipping','ranch','original hot','smoked bbq','honey mustard'], reply: 'Our dipping sauces are Ranch, Original Hot, Smoked BBQ, and Honey Mustard. Great with wings, tenders, fries, mozzarella sticks, and jalapeno bites.', idx: 23 },
+      { keywords: ['calorie','calories','kcal','nutrition','nutritional','cal','fat','protein','carbs','healthy','low cal','diet','count','macro','least','lowest','minimum','most','highest','maximum','5000','5000 calorie','heavy','light','best','recommend'], reply: 'The lowest calorie option is Jalapeno Bites at around 300 to 400 calories. Mozzarella Sticks and Fries are also on the lighter side. The most calories come from the Meat Lover pizza at up to 1300, the Barsha Bites sharing combo at 800 to 1100, or Chicken Tenders 6 piece at 1000 to 1300. On a 5000 calorie diet you could easily fit a full meal pizza and wings and a dessert. General estimates: Pizzas 700 to 1300 each. Wings 8 pieces 500 to 800. Burgers 600 to 1000. Combos add about 500 for fries and drink. Tenders 3 piece 600 to 800, 6 piece 1000 to 1300. Popcorn Chicken 500 to 650. Mozzarella Sticks 400 to 500. Jalapeno Bites 300 to 400. Fries 350 to 450. Desserts 300 to 500 per serve. These are estimates, check the delivery app.', idx: 24 },
+      { keywords: ['dine in','dine-in','sit down','sit-down','restaurant','eat in','eat-in','table','seating','seated','dine','dinning','dining','lobby','indoor','outdoor','patio','inside'], reply: 'Backstage Bites is currently delivery only with no dine in option. Order through Deliveroo, Talabat, or Careem Food from our kitchens in Arjan and JBR Marina.', idx: 25 },
+    ];
+
+    var calorieData = [
+      { name: 'Popcorn Chicken', cal: '500-650' },
+      { name: 'Chicken Tenders 3pc', cal: '600-800' },
+      { name: 'Chicken Tenders 6pc', cal: '1000-1300' },
+      { name: 'Mozzarella Sticks 5pc', cal: '400-500' },
+      { name: 'Jalapeno Bites 5pc', cal: '300-400' },
+      { name: 'French Fries', cal: '350-450' },
+      { name: 'Barsha Bites', cal: '800-1100' },
+      { name: 'Margherita Pizza', cal: '700-900' },
+      { name: 'Pepperoni Pizza', cal: '800-1000' },
+      { name: 'Chicken Alfredo Pizza', cal: '900-1100' },
+      { name: 'Vegetarian Pizza', cal: '600-800' },
+      { name: 'Meat Lover Pizza', cal: '1000-1300' },
+      { name: 'Truffle Mushroom Pizza', cal: '800-1000' },
+      { name: 'Funghi Pizza', cal: '700-900' },
+      { name: 'Buffalo Wings 8pc', cal: '500-700' },
+      { name: 'Hickory BBQ Wings 8pc', cal: '550-750' },
+      { name: 'Zesty Honey Mustard Wings 8pc', cal: '550-750' },
+      { name: 'Parmesan Punch Wings 8pc', cal: '600-800' },
+      { name: 'Spicy Habanero Wings 8pc', cal: '500-700' },
+      { name: 'Peri Mango Wings 8pc', cal: '500-700' },
+      { name: 'Sichuan Wings 8pc', cal: '500-700' },
+      { name: 'Smoked Spiced Wings 8pc', cal: '500-700' },
+      { name: 'Honey Lime Cajun Wings 8pc', cal: '550-750' },
+      { name: 'Korean Soy-Ginger Wings 8pc', cal: '550-750' },
+      { name: 'Classic Cheeseburger', cal: '600-800' },
+      { name: 'Mushroom Burger', cal: '650-850' },
+      { name: 'Fried Chicken Burger', cal: '550-750' },
+      { name: 'Swiss Cheeseburger', cal: '650-850' },
+      { name: 'Burger & Crispy Brisket', cal: '800-1000' },
+      { name: 'Honey Cake', cal: '350-450' },
+      { name: 'Cheesecake', cal: '400-500' },
+      { name: 'Custard Profiteroles', cal: '300-400' },
+    ];
+
+    function findMatch(text) {
+      var lower = text.toLowerCase();
+      var bestIdx = -1, bestScore = 0;
+      for (var i = 0; i < faq.length; i++) {
+        var score = 0;
+        for (var j = 0; j < faq[i].keywords.length; j++) {
+          if (lower.indexOf(faq[i].keywords[j]) !== -1) score++;
+        }
+        if (score > bestScore) { bestScore = score; bestIdx = i }
+      }
+      return bestIdx;
+    }
+
+    function extractCalorieLimit(text) {
+      var lower = text.toLowerCase(), m;
+      m = lower.match(/(?:under|less than|below|max|maximum|within|at most|no more than|up to|lesser|lower|min|only|budget|limit|or less)\s*(\d+)/i);
+      if (m) { var n = parseInt(m[1]); if (n >= 100 && n <= 2000) return n }
+      m = lower.match(/\b(\d+)\s*(?:cal|calorie|calories)\b/);
+      if (m) { var n = parseInt(m[1]); if (n >= 100 && n <= 2000) return n }
+      return 0;
+    }
+
+    var flavorMap = {
+      sweet: ['sweet','dessert','cake','honey','sugar','chocolate','caramel','vanilla','candy','sweetest'],
+      barbecue: ['barbecue','bbq','smoked','smoky','grill','char','smoke'],
+      savory: ['savory','savoury','umami','hearty','rich','salty'],
+      spicy: ['spicy','hot','heat','fiery','habanero','sichuan','chili','chilli','buffalo','kick'],
+      cheesy: ['cheese','cheesy','mozzarella','parmesan','cheddar','swiss'],
+      meaty: ['meat','meaty','beef','chicken','pepperoni','brisket','burger','steak'],
+      vegetarian: ['vegetarian','veggie','vegetable','vegan','plant','meatless'],
+      truffle: ['truffle','earthy','mushroom','funghi'],
+      tangy: ['tangy','zesty','mustard','vinegar','pickle'],
+      garlic: ['garlic','herb','herby'],
+      tropical: ['tropical','mango','lime','fruit','fruity','citrus'],
+      creamy: ['creamy','alfredo','velvety','smooth'],
+      crispy: ['crispy','crunchy','crisp','breaded'],
+    };
+    var flavorTags = {
+      'Popcorn Chicken': ['savory','crispy','chicken'],
+      'Chicken Tenders 3pc': ['savory','crispy','chicken'],
+      'Chicken Tenders 6pc': ['savory','crispy','chicken'],
+      'Mozzarella Sticks 5pc': ['savory','cheesy','creamy','crispy'],
+      'Jalapeno Bites 5pc': ['savory','spicy','crispy'],
+      'French Fries': ['savory','crispy'],
+      'Barsha Bites': ['savory','cheesy','crispy'],
+      'Margherita Pizza': ['savory','cheesy'],
+      'Pepperoni Pizza': ['savory','cheesy','spicy','meaty'],
+      'Chicken Alfredo Pizza': ['savory','creamy','chicken'],
+      'Vegetarian Pizza': ['savory','cheesy','vegetarian'],
+      'Meat Lover Pizza': ['savory','cheesy','meaty'],
+      'Truffle Mushroom Pizza': ['savory','cheesy','truffle'],
+      'Funghi Pizza': ['savory','cheesy','garlic'],
+      'Buffalo Wings 8pc': ['savory','spicy','tangy','chicken'],
+      'Hickory BBQ Wings 8pc': ['sweet','barbecue','chicken'],
+      'Zesty Honey Mustard Wings 8pc': ['sweet','tangy','chicken'],
+      'Parmesan Punch Wings 8pc': ['savory','cheesy','garlic','chicken'],
+      'Spicy Habanero Wings 8pc': ['spicy','tropical','chicken'],
+      'Peri Mango Wings 8pc': ['sweet','spicy','tropical','chicken'],
+      'Sichuan Wings 8pc': ['spicy','chicken'],
+      'Smoked Spiced Wings 8pc': ['barbecue','savory','chicken'],
+      'Honey Lime Cajun Wings 8pc': ['sweet','tangy','tropical','chicken'],
+      'Korean Soy-Ginger Wings 8pc': ['sweet','savory','chicken'],
+      'Classic Cheeseburger': ['savory','meaty','cheesy'],
+      'Mushroom Burger': ['savory','meaty','cheesy'],
+      'Fried Chicken Burger': ['savory','crispy','chicken'],
+      'Swiss Cheeseburger': ['savory','meaty','cheesy'],
+      'Burger & Crispy Brisket': ['savory','meaty','barbecue'],
+      'Honey Cake': ['sweet'],
+      'Cheesecake': ['sweet','creamy','cheesy'],
+      'Custard Profiteroles': ['sweet','creamy'],
+    };
+
+    function extractFlavors(text) {
+      var lower = text.toLowerCase(), matched = [];
+      for (var cat in flavorMap) {
+        for (var k = 0; k < flavorMap[cat].length; k++) {
+          if (lower.indexOf(flavorMap[cat][k]) !== -1) { matched.push(cat); break }
+        }
+      }
+      return matched;
+    }
+
+    function processQuestion(text) {
+      botStatus.textContent = '\u201C' + text + '\u201D';
+      var lower = text.toLowerCase();
+      var randomWords = ['random','surprise me','surprise','choose for me','pick something','pick for me','decide','what should i eat','what should i get',"can't decide",'undecided','pick a random','something random','make a choice','pick an item','pick a meal','select something','select a random'];
+      for (var r = 0; r < randomWords.length; r++) { if (lower.indexOf(randomWords[r]) !== -1) { startRandomPicker(); return } }
+      var calNum = extractCalorieLimit(text), flavors = extractFlavors(text);
+
+      if (calNum || flavors.length > 0) {
+        var matched = [], seen = {};
+        for (var i = 0; i < calorieData.length; i++) {
+          var item = calorieData[i];
+          var tags = flavorTags[item.name] || [];
+          var underCal = !calNum || parseInt(item.cal.split('-')[1]) <= calNum;
+          var hasFlavor = flavors.length === 0;
+          for (var t = 0; t < tags.length && !hasFlavor; t++) {
+            if (flavors.indexOf(tags[t]) !== -1) hasFlavor = true;
+          }
+          if (underCal && hasFlavor && !seen[item.name]) {
+            matched.push(item);
+            seen[item.name] = true;
+          }
+        }
+        if (matched.length > 0) {
+          var showCal = !!calNum;
+          var names = [];
+          for (var i = 0; i < matched.length; i++) {
+            names.push(showCal ? matched[i].name + ' (' + matched[i].cal + ')' : matched[i].name);
+          }
+          var prefix = '';
+          if (calNum && flavors.length > 0) prefix = 'Under ' + calNum + ' calories and ' + flavors[0] + ': ';
+          else if (calNum) prefix = 'Under ' + calNum + ' calories: ';
+          else if (flavors.length > 0) prefix = 'For ' + flavors[0] + ': ';
+          var reply;
+          if (names.length <= 4) reply = prefix + names.join(', ') + '.';
+          else { var last = names.pop(); reply = prefix + names.join(', ') + ', and ' + last + '.'; }
+          setTimeout(function() { botStatus.textContent = reply; botAudio.src = 'audio/faq24.wav'; botAudio.play().catch(function(){}) }, 100);
+          return;
+        }
+        if (calNum) {
+          var reply = 'Nothing on the menu is under ' + calNum + ' calories. The lightest option is Jalapeno Bites at 300 to 400 calories.';
+          setTimeout(function() { botStatus.textContent = reply; botAudio.src = 'audio/faq24.wav'; botAudio.play().catch(function(){}) }, 100);
+          return;
+        }
+      }
+
+      var idx = findMatch(text);
+      playFaq(idx);
+    }
+
+    function startRandomPicker() {
+      var items = calorieData.map(function(i) { return i.name });
+      var rp = document.getElementById('randomPicker');
+      var d = document.getElementById('rpDisplay');
+      var r = document.getElementById('rpResult');
+      r.classList.remove('show');
+      r.textContent = '';
+      pttBtn.style.display = 'none';
+      rp.style.display = 'flex';
+      var target = Math.floor(Math.random() * items.length);
+      var totalSteps = 20 + Math.floor(Math.random() * 10);
+      while (((totalSteps - 1) % items.length) !== target) { totalSteps++ }
+      var step = 0;
+      (function tick() {
+        d.textContent = items[step % items.length];
+        step++;
+        if (step >= totalSteps) {
+          var chosen = items[target];
+          d.textContent = chosen;
+          d.style.color = '#c9261a';
+          d.style.fontWeight = '700';
+          d.style.fontSize = '15px';
+          r.textContent = chosen;
+          r.style.opacity = '1';
+          botStatus.textContent = 'How about ' + chosen + '?';
+          setTimeout(function() {
+            d.style.color = '#d4a635';
+            d.style.fontWeight = '600';
+            d.style.fontSize = '13px';
+            r.style.opacity = '0';
+            rp.style.display = 'none';
+            pttBtn.style.display = 'block';
+          }, 5000);
+          return;
+        }
+        setTimeout(tick, Math.round(30 + 150 * step / totalSteps));
+      })();
+    }
+
+    function playFaq(idx) {
+      try { var ac = new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume() } catch(_) {}
+      if (idx >= 0 && idx < faq.length) {
+        botStatus.textContent = faq[idx].reply;
+        botAudio.src = 'audio/faq' + faq[idx].idx + '.wav';
+        botAudio.play().catch(function(){});
+      } else {
+        botStatus.textContent = 'I am not sure about that. Try asking about the menu, ordering, hours, locations, or our story.';
+        botAudio.src = 'audio/faq26.wav';
+        botAudio.play().catch(function(){});
+      }
+    }
+
+    function resetUI() {
+      pttBtn.style.transform = 'scale(1)';
+    }
+
+    function toggleListening(e) {
+      if (e) e.preventDefault();
+      var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) { botStatus.textContent = 'Speech recognition unavailable. Try Chrome on desktop.'; return }
+
+      if (isListening) {
+        if (recognition) { try { recognition.stop() } catch (_) {} }
+        return;
+      }
+
+      try { if (recognition) recognition.abort() } catch (_) {}
+      recognition = new SR();
+      if (!recognition) { botStatus.textContent = 'Speech recognition unavailable.'; return }
+      finalTranscript = '';
+      recognition.lang = 'en-US';
+      recognition.interimResults = true;
+      recognition.continuous = false;
+      recognition.maxAlternatives = 1;
+      recognition.onresult = function(event) {
+        for (var i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) { finalTranscript = event.results[i][0].transcript }
+        }
+      };
+      recognition.onerror = function() { isListening = false; resetUI() };
+      recognition.onend = function() {
+        isListening = false;
+        resetUI();
+        if (finalTranscript) {
+          processQuestion(finalTranscript);
+        } else if (botStatus.textContent === 'Listening\u2026') {
+          botStatus.textContent = 'I didn\u2019t catch that. Try again?';
+        }
+      };
+      isListening = true;
+      pttBtn.style.transform = 'scale(.92)';
+      botStatus.textContent = 'Listening\u2026';
+      try { recognition.start() } catch (_) { isListening = false }
+    }
+
+    pttBtn.addEventListener('click', toggleListening);
+
+    var chatInput = document.getElementById('chatInput');
+    var chatSendBtn = document.getElementById('chatSendBtn');
+
+    chatSendBtn.addEventListener('click', function() {
+      var t = chatInput.value.trim();
+      if (t) { processQuestion(t); chatInput.value = ''; chatInput.blur() }
+    });
+    chatInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var t = chatInput.value.trim();
+        if (t) { processQuestion(t); chatInput.value = ''; chatInput.blur() }
+      }
+    });
+    chatInput.addEventListener('focus', function() {
+      setTimeout(function() {
+        var row = document.getElementById('textInputRow');
+        if (row) row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 300);
+    });
+
+    function closeModal() {
+      modalOverlay.classList.remove('open');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      if (recognition && isListening) { try { recognition.abort() } catch (_) {} isListening = false }
+      resetUI();
+      botStatus.textContent = 'Ask me anything about Backstage Bites.';
+      botAudio.pause(); botAudio.currentTime = 0;
+      if (chatInput) chatInput.value = '';
+      var rp = document.getElementById('randomPicker');
+      if (rp && rp.style.display !== 'none') { rp.style.display = 'none'; pttBtn.style.display = 'block' }
+    }
   </script>
 </body>
 </html>
