@@ -817,17 +817,17 @@
 
     .modal {
       background: #141210;
-      border: 1px solid rgba(237, 232, 223, .1);
-      border-radius: 16px;
+      border: 1px solid rgba(237, 232, 223, .08);
+      border-radius: 20px;
       width: 94%;
       max-width: 420px;
       max-height: 92vh;
-      padding: 32px 24px 24px;
+      padding: 36px 28px 28px;
       position: relative;
       transform: scale(.92) translateY(24px);
-      transition: transform .4s cubic-bezier(.22, .68, .4, 1);
       overflow-y: auto;
       opacity: 0;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .4);
       transition: transform .4s cubic-bezier(.22, .68, .4, 1), opacity .35s ease-out .1s
     }
 
@@ -836,8 +836,8 @@
         width: 88%;
         max-width: 400px;
         height: auto;
-        border-radius: 12px;
-        padding: 20px 16px 16px
+        border-radius: 16px;
+        padding: 24px 20px 20px
       }
 
       .modal-header {
@@ -860,25 +860,26 @@
       right: 12px;
       width: 32px;
       height: 32px;
-      background: none;
-      border: none;
+      background: rgba(237, 232, 223, .04);
+      border: 1px solid rgba(237, 232, 223, .06);
       color: rgba(237, 232, 223, .4);
-      font-size: 22px;
+      font-size: 18px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      transition: color .2s, background .2s
+      transition: color .2s, background .2s, border-color .2s
     }
 
     .modal-close:active {
       color: #ede8df;
-      background: rgba(237, 232, 223, .08)
+      background: rgba(237, 232, 223, .08);
+      border-color: rgba(237, 232, 223, .12)
     }
 
     .modal-header {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 900;
       letter-spacing: -.3px;
       margin-bottom: 12px;
@@ -891,9 +892,10 @@
 
     .modal-body {
       font-size: 14px;
-      color: rgba(237, 232, 223, .55);
-      line-height: 1.7;
-      text-align: center
+      color: rgba(237, 232, 223, .5);
+      line-height: 1.6;
+      text-align: center;
+      font-weight: 300
     }
 
     @media(min-width:768px) {
