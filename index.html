@@ -202,7 +202,8 @@
       height: 100dvh;
       background: #0b0a08;
       overflow: hidden;
-      z-index: 0
+      z-index: 0;
+      will-change: opacity
     }
 
     .scroll-video-video {
@@ -975,6 +976,7 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="menu.html">Menu</a></li>
       <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="battle.html">Battle of the Bites</a></li>
       <li><a href="index.html#order-now">Order</a></li>
       <li><a href="index.html#join-list">Join the List</a></li>
       <li><a href="#" id="backstageBotLink">Backstage Bot</a></li>
@@ -1146,9 +1148,12 @@
       return 1 - Math.pow(1 - t, 3);
     }
 
-    function syncVideo() {
+    function _syncVideo() {
       const scrollY = window.scrollY;
       const vh = window.innerHeight;
+
+      if (scrollY > vh * 2) { nav.classList.toggle('scrolled', true); return }
+
       let videoProgress = Math.min(1, scrollY / vh);
 
       if (ready && video.duration) {
@@ -1198,8 +1203,14 @@
       nav.classList.toggle('scrolled', videoProgress > 0.6 || scrollY > vh);
     }
 
-    window.addEventListener('scroll', syncVideo, { passive: true });
-    syncVideo();
+    let scrollTicking = false;
+    window.addEventListener('scroll', function() {
+      if (!scrollTicking) {
+        requestAnimationFrame(function() { _syncVideo(); scrollTicking = false });
+        scrollTicking = true;
+      }
+    }, { passive: true });
+    _syncVideo();
 
     const revealEls = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
