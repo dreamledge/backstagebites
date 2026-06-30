@@ -1,0 +1,62 @@
+name: Update Wall of Fame
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Agent-Reach
+        run: |
+          pip install --user "https://github.com/Panniantong/agent-reach/archive/main.zip"
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Configure Twitter cookies
+        env:
+          TWITTER_COOKIES: ${{ secrets.TWITTER_COOKIES }}
+        run: |
+          if [ -n "$TWITTER_COOKIES" ]; then
+            echo "$TWITTER_COOKIES" | agent-reach configure twitter-cookies -
+          fi
+
+      - name: Search for #backstagebites mentions
+        id: search
+        continue-on-error: true
+        run: |
+          mkdir -p data
+          if command -v agent-reach &> /dev/null; then
+            agent-reach twitter search "#backstagebites" -n 20 -o data/wall-of-fame-raw.json
+          fi
+          echo "done=true" >> $GITHUB_OUTPUT
+
+      - name: Fallback — use current data if search unavailable
+        if: steps.search.outputs.done != 'true'
+        run: |
+          echo "Twitter search unavailable. Keeping existing data."
+          echo "For future updates, add a TWITTER_COOKIES secret with your Twitter/X cookies."
+
+      - name: Update data file
+        run: |
+          if [ -f data/wall-of-fame-raw.json ]; then
+            python .github/scripts/format-wall-of-fame.py
+          fi
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "Backstage Bot"
+          git config user.email "bot@backstagebites.ae"
+          git add data/wall-of-fame.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update Wall of Fame data"
+            git push
+          fi

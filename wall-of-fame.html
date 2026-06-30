@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-  <title>Battle of the Bites — Backstage Bites</title>
+  <title>Wall of Fame — Backstage Bites</title>
   <script>history.scrollRestoration='manual';window.addEventListener('pageshow',function(e){document.querySelector('meta[name=viewport]').content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no';window.scrollTo(0,0);if(e.persisted)setTimeout(function(){window.scrollTo(0,0)},50)});window.addEventListener('load',function(){window.scrollTo(0,0)});window.addEventListener('unload',function(){})</script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,46 +38,42 @@
     @media(min-width:768px){.page-wrap{padding-top:100px}}
 
     @keyframes fadeUp{0%{opacity:0;transform:translateY(24px)}100%{opacity:1;transform:translateY(0)}}
-    @keyframes vsPulse{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.06);opacity:.5}}
-    @keyframes barGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
-    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
-    .battle-hero{text-align:center;margin-bottom:56px;position:relative}
-    .battle-hero::after{content:'';display:block;width:48px;height:3px;margin:28px auto 0;border-radius:2px;background:linear-gradient(90deg,#d4a635,#c9261a);opacity:.5}
-    .battle-hero h1{font-size:clamp(32px,7vw,52px);font-weight:900;letter-spacing:-1.5px;margin-bottom:16px;background:linear-gradient(135deg,#ede8df 0%,#d4a635 50%,#c9261a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-transform:uppercase;line-height:1}
-    .battle-hero p{font-size:14px;color:rgba(237,232,223,.5);line-height:1.7;max-width:480px;margin:0 auto 20px;font-weight:300}
-    .battle-week{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:6px 16px;border-radius:100px;background:rgba(237,232,223,.06);border:1px solid rgba(237,232,223,.1);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(237,232,223,.55);font-weight:600}
-    .battle-reset-note{font-size:11px;color:rgba(237,232,223,.3);margin-top:10px;font-weight:300}
+    .wof-hero{text-align:center;margin-bottom:40px;position:relative}
+    .wof-hero::after{content:'';display:block;width:48px;height:3px;margin:24px auto 0;border-radius:2px;background:linear-gradient(90deg,#d4a635,#c9261a);opacity:.5}
+    .wof-hero h1{font-size:clamp(32px,7vw,52px);font-weight:900;letter-spacing:-1.5px;margin-bottom:12px;background:linear-gradient(135deg,#ede8df 0%,#d4a635 50%,#c9261a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-transform:uppercase;line-height:1}
+    .wof-hero p{font-size:14px;color:rgba(237,232,223,.5);line-height:1.7;max-width:480px;margin:0 auto;font-weight:300}
+    .wof-hero .sub-text{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 16px;border-radius:100px;background:rgba(237,232,223,.06);border:1px solid rgba(237,232,223,.1);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(237,232,223,.55);font-weight:600}
 
-    .matchup{background:#141210;border:1px solid rgba(237,232,223,.08);border-radius:16px;padding:28px 24px 24px;margin-bottom:24px;position:relative;overflow:hidden;animation:fadeUp .5s cubic-bezier(.22,.68,.4,1) both}
-    .matchup:nth-child(1){animation-delay:.1s}
-    .matchup:nth-child(2){animation-delay:.25s}
-    .matchup:nth-child(3){animation-delay:.4s}
-    .matchup::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#d4a635,#c9261a);opacity:.8}
-    .matchup-header{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;text-align:center;margin-bottom:20px;color:rgba(237,232,223,.5)}
-    .matchup-items{display:flex;align-items:center;justify-content:center;gap:16px;padding:4px 0}
-    .matchup-item{flex:1;text-align:center}
-    .matchup-item .name{font-size:14px;font-weight:700;margin-bottom:8px;padding:0 6px;line-height:1.3;letter-spacing:-.01em}
-    .matchup-item .vote-count{font-size:11px;color:rgba(237,232,223,.35);margin-bottom:12px;font-weight:400;transition:color .3s}
-    .matchup-item .vote-count.highlight{color:#d4a635}
-    .matchup-vs{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:2px solid rgba(237,232,223,.1);font-size:12px;font-weight:900;letter-spacing:.5px;color:rgba(237,232,223,.25);flex-shrink:0;animation:vsPulse 3s ease-in-out infinite}
-    .vote-btn{display:inline-block;padding:10px 24px;border-radius:100px;border:none;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:opacity .2s,transform .15s,box-shadow .2s,background .3s;color:#fff;min-width:80px}
-    .vote-btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.35)}
-    .vote-btn:not(:disabled):active{transform:scale(.95)}
-    .vote-btn:disabled{opacity:.5;cursor:default;transform:none;box-shadow:none}
-    .vote-btn.voted{opacity:1;background:rgba(237,232,223,.12)!important}
-    .vote-btn.gold{background:linear-gradient(135deg,#d4a635,#b8922e)}
-    .vote-btn.red{background:linear-gradient(135deg,#c9261a,#a31e14)}
+    .carousel-wrap{position:relative;animation:fadeUp .5s cubic-bezier(.22,.68,.4,1) both}
+    .carousel{position:relative;overflow:hidden;border-radius:16px;background:#141210;border:1px solid rgba(237,232,223,.08);min-height:340px}
+    .carousel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#d4a635,#c9261a);opacity:.8;z-index:2}
 
-    .bar-row{display:flex;align-items:center;gap:12px;margin-top:14px}
-    .bar-row:last-child{margin-bottom:0}
-    .bar-label{font-size:10px;font-weight:600;color:rgba(237,232,223,.45);width:44px;text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
-    .bar-track{flex:1;height:8px;border-radius:4px;background:rgba(237,232,223,.06);overflow:hidden;position:relative}
-    .bar-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.22,.68,.4,1);min-width:0}
-    .bar-fill.gold{background:linear-gradient(90deg,#d4a635,#b8922e)}
-    .bar-fill.red{background:linear-gradient(90deg,#c9261a,#a31e14)}
-    .bar-fill.animate{animation:barGlow .6s ease}
-    .bar-pct{font-size:11px;font-weight:600;color:rgba(237,232,223,.35);width:36px;text-align:left;flex-shrink:0;font-feature-settings:'tnum' 1}
+    .carousel-track{display:flex;transition:transform .5s cubic-bezier(.22,.68,.4,1)}
+    .carousel-slide{min-width:100%;padding:48px 28px 28px;display:flex;flex-direction:column;align-items:center;text-align:center}
+
+    .slide-platform{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px}
+    .slide-platform svg{width:20px;height:20px;flex-shrink:0}
+    .slide-platform .platform-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(237,232,223,.35)}
+    .slide-username{font-size:13px;font-weight:600;color:rgba(237,232,223,.55);margin-bottom:20px;letter-spacing:-.01em}
+    .slide-username .handle{color:#d4a635}
+    .slide-content{font-size:15px;line-height:1.7;font-weight:300;color:rgba(237,232,223,.85);max-width:520px;margin-bottom:24px;letter-spacing:-.01em}
+    .slide-content .hashtag{color:#d4a635;font-weight:400}
+    .slide-stats{display:flex;gap:24px;justify-content:center}
+    .slide-stats .stat{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(237,232,223,.4);font-weight:400}
+    .slide-stats .stat svg{width:14px;height:14px;opacity:.5}
+    .slide-date{font-size:10px;color:rgba(237,232,223,.25);margin-top:16px;letter-spacing:1px;text-transform:uppercase}
+
+    .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:36px;height:36px;border-radius:50%;border:1px solid rgba(237,232,223,.1);background:rgba(20,18,16,.85);color:rgba(237,232,223,.5);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:color .2s,border-color .2s,background .2s;backdrop-filter:blur(4px);touch-action:manipulation}
+    .carousel-btn:active{color:#ede8df;border-color:rgba(237,232,223,.2);background:rgba(20,18,16,.95)}
+    .carousel-btn.prev{left:10px}
+    .carousel-btn.next{right:10px}
+
+    .carousel-dots{display:flex;justify-content:center;gap:8px;margin-top:20px}
+    .carousel-dot{width:8px;height:8px;border-radius:50%;background:rgba(237,232,223,.12);border:none;cursor:pointer;transition:background .3s,transform .2s;padding:0;touch-action:manipulation}
+    .carousel-dot.active{background:#d4a635;transform:scale(1.25)}
+
+    .empty-state{text-align:center;padding:60px 28px;color:rgba(237,232,223,.35);font-size:14px;font-weight:300;line-height:1.7}
 
     .footer{margin-top:48px;text-align:center;padding:32px 0 24px;border-top:1px solid rgba(237,232,223,.05)}
     .footer p{font-size:11px;color:rgba(237,232,223,.25);font-weight:300}
@@ -116,23 +112,29 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="menu.html">Menu</a></li>
       <li><a href="gallery.html">Gallery</a></li>
-      <li><a href="index.html#order-now">Order</a></li>
-      <li><a href="index.html#join-list">Join the List</a></li>
       <li><a href="battle.html">Battle of the Bites</a></li>
       <li><a href="wall-of-fame.html">Wall of Fame</a></li>
+      <li><a href="index.html#order-now">Order</a></li>
+      <li><a href="index.html#join-list">Join the List</a></li>
       <li><a href="#" id="backstageBotLink">Backstage Bot</a></li>
     </ul>
   </div>
 
   <div class="page-wrap">
-    <div class="battle-hero">
-      <h1>Battle of the Bites</h1>
-      <p>Each week we randomly select two menu items to face off. You vote — we tally. The winner gets bragging rights until next week.</p>
-      <div class="battle-week" id="weekLabel"></div>
-      <div class="battle-reset-note">New matchups every Monday</div>
+    <div class="wof-hero">
+      <h1>Wall of Fame</h1>
+      <p>Every mention, every shout-out. The best posts from fans who know where the real flavor happens.</p>
+      <div class="sub-text">#backstagebites</div>
     </div>
 
-    <div id="matchupsContainer"></div>
+    <div class="carousel-wrap">
+      <div class="carousel" id="carousel">
+        <div class="carousel-track" id="carouselTrack"></div>
+        <button class="carousel-btn prev" id="carouselPrev" aria-label="Previous">&#8249;</button>
+        <button class="carousel-btn next" id="carouselNext" aria-label="Next">&#8250;</button>
+      </div>
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
 
     <footer class="footer">
       <p>Backstage Bites — Where the Real Flavor Happens</p>
@@ -169,8 +171,7 @@
     }
 
     hamburger.addEventListener('click', function() {
-      var isOpen = hamburger.classList.contains('open');
-      toggleMenu(!isOpen);
+      toggleMenu(!hamburger.classList.contains('open'));
     });
 
     sideMenuClose.addEventListener('click', function() { toggleMenu(false) });
@@ -531,161 +532,120 @@
       }, 300);
     });
 
-    // --- Battle of the Bites logic ---
+    // --- Wall of Fame carousel logic ---
 
-    function getWeekId() {
-      var d = new Date();
-      d.setHours(0, 0, 0, 0);
-      d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
-      var week1 = new Date(d.getFullYear(), 0, 4);
-      var weekNum = 1 + Math.round(((d - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
-      return d.getFullYear() + '-W' + ('0' + weekNum).slice(-2);
+    var slides = [];
+    var currentIndex = 0;
+    var autoTimer = null;
+    var AUTO_INTERVAL = 5000;
+    var isPaused = false;
+
+    function formatDate(dateStr) {
+      var parts = dateStr.split('-');
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return months[parseInt(parts[1]) - 1] + ' ' + parseInt(parts[2]) + ', ' + parts[0];
     }
 
-    function seededRandom(seed) {
-      var x = Math.sin(seed * 9301 + 49297) * 49297;
-      return x - Math.floor(x);
+    function formatNumber(n) {
+      if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+      return n.toString();
     }
 
-    function shuffleArray(arr, seed) {
-      var a = arr.slice();
-      for (var i = a.length - 1; i > 0; i--) {
-        var j = Math.floor(seededRandom(seed + i * 7919) * (i + 1));
-        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    function buildSlideHtml(item) {
+      var isTwitter = item.platform === 'twitter';
+      var svg = isTwitter
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="rgba(237,232,223,.35)" stroke-width="1.5"><path d="M22 4s-2 1-3 1c-1 0-2-1-3-1-2 0-4 2-4 4v1c-3 0-6-2-8-5 0 0-1 3 1 6-1 0-2 0-3-1 0 0 1 4 4 5-1 1-3 1-3 1s1 3 5 3c-2 2 4 4 10 4 8 0 12-7 12-12 0 0 2-2 2-4z"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="rgba(237,232,223,.35)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="18" cy="6" r="1.5"/></svg>';
+
+      var content = item.content.replace(/#backstagebites/g, '<span class="hashtag">#backstagebites</span>');
+
+      return '<div class="carousel-slide">' +
+        '<div class="slide-platform">' + svg + '<span class="platform-label">' + (isTwitter ? 'Twitter / X' : 'Instagram') + '</span></div>' +
+        '<div class="slide-username">' + item.username + ' <span class="handle">' + (isTwitter ? '' : '') + '</span></div>' +
+        '<div class="slide-content">' + content + '</div>' +
+        '<div class="slide-stats">' +
+          '<span class="stat">' + (isTwitter ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12v8h4v-8M10 12v8h4v-8M16 12v8h4v-8M4 8l8-6 8 6"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-8-5-8-11c0-3 2-5 5-5 2 0 3 1 3 1s1-1 3-1c3 0 5 2 5 5 0 6-8 11-8 11z"/></svg>') + formatNumber(item.likes) + '</span>' +
+          '<span class="stat">' + (isTwitter ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v18M3 12h18"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12c0 5-4 9-9 9s-9-4-9-9 4-9 9-9 9 4 9 9z"/></svg>') + formatNumber(item.retweets) + '</span>' +
+        '</div>' +
+        '<div class="slide-date">' + formatDate(item.date) + '</div>' +
+      '</div>';
+    }
+
+    function renderCarousel(data) {
+      var track = document.getElementById('carouselTrack');
+      var dotsContainer = document.getElementById('carouselDots');
+
+      if (!data || data.length === 0) {
+        track.innerHTML = '<div class="empty-state">No posts yet. Be the first to tag <span style="color:#d4a635">#backstagebites</span>!</div>';
+        dotsContainer.innerHTML = '';
+        document.getElementById('carouselPrev').style.display = 'none';
+        document.getElementById('carouselNext').style.display = 'none';
+        return;
       }
-      return a;
+
+      slides = data;
+      currentIndex = 0;
+      track.innerHTML = data.map(function(item) { return buildSlideHtml(item) }).join('');
+
+      dotsContainer.innerHTML = data.map(function(_, i) {
+        return '<button class="carousel-dot' + (i === 0 ? ' active' : '') + '" data-index="' + i + '" aria-label="Go to slide ' + (i + 1) + '"></button>';
+      }).join('');
+
+      document.getElementById('carouselPrev').style.display = '';
+      document.getElementById('carouselNext').style.display = '';
+      startAutoPlay();
     }
 
-    function getWeeklyMatchups() {
-      var weekId = getWeekId();
-      var seed = 0;
-      for (var si = 0; si < weekId.length; si++) seed = seed * 31 + weekId.charCodeAt(si);
+    function goToSlide(index) {
+      if (index < 0) index = slides.length - 1;
+      if (index >= slides.length) index = 0;
+      currentIndex = index;
+      var track = document.getElementById('carouselTrack');
+      track.style.transform = 'translateX(-' + (index * 100) + '%)';
 
-      var burgers = ['Classic Cheeseburger', 'Mushroom Burger', 'Fried Chicken Burger', 'Swiss Cheeseburger', 'Burger & Crispy Brisket'];
-      var wings = ['Buffalo Wings 8pc', 'Hickory BBQ Wings 8pc', 'Zesty Honey Mustard Wings 8pc', 'Parmesan Punch Wings 8pc', 'Spicy Habanero Wings 8pc', 'Peri Mango Wings 8pc', 'Sichuan Wings 8pc', 'Smoked Spiced Wings 8pc', 'Honey Lime Cajun Wings 8pc', 'Korean Soy-Ginger Wings 8pc'];
-      var sides = ['Popcorn Chicken', 'Chicken Tenders 3pc', 'Mozzarella Sticks 5pc', 'Jalapeno Bites 5pc', 'French Fries', 'Barsha Bites'];
-
-      var shufBurgers = shuffleArray(burgers, seed);
-      var shufWings = shuffleArray(wings, seed + 1);
-      var shufSides = shuffleArray(sides, seed + 2);
-
-      return {
-        weekId: weekId,
-        matchups: [
-          {
-            id: 'burger',
-            title: '🍔 Burger vs Burger',
-            itemA: shufBurgers[0],
-            itemB: shufBurgers[1]
-          },
-          {
-            id: 'wings',
-            title: '🍗 Wings vs Wings',
-            itemA: shufWings[0],
-            itemB: shufWings[1]
-          },
-          {
-            id: 'sides',
-            title: '🍟 Sides vs Sides',
-            itemA: shufSides[0],
-            itemB: shufSides[1]
-          }
-        ]
-      };
+      var dots = document.querySelectorAll('.carousel-dot');
+      for (var i = 0; i < dots.length; i++) {
+        dots[i].classList.toggle('active', i === index);
+      }
     }
 
-    function loadVotes(weekId) {
-      try { return JSON.parse(localStorage.getItem('battle_votes_' + weekId)) || {} } catch(_) { return {} }
+    function goNext() { goToSlide(currentIndex + 1) }
+    function goPrev() { goToSlide(currentIndex - 1) }
+
+    function startAutoPlay() {
+      stopAutoPlay();
+      autoTimer = setInterval(function() {
+        if (!isPaused) goNext();
+      }, AUTO_INTERVAL);
     }
 
-    function saveVotes(weekId, votes) {
-      localStorage.setItem('battle_votes_' + weekId, JSON.stringify(votes));
+    function stopAutoPlay() {
+      if (autoTimer) { clearInterval(autoTimer); autoTimer = null }
     }
 
-    var battle = getWeeklyMatchups();
-    document.getElementById('weekLabel').textContent = 'Week of ' + battle.weekId;
+    document.getElementById('carouselNext').addEventListener('click', function() { goNext(); startAutoPlay() });
+    document.getElementById('carouselPrev').addEventListener('click', function() { goPrev(); startAutoPlay() });
 
-    var votes = loadVotes(battle.weekId);
-    var container = document.getElementById('matchupsContainer');
-
-    battle.matchups.forEach(function(m, idx) {
-      var voteKeyA = m.id + '_a';
-      var voteKeyB = m.id + '_b';
-      var countA = votes[voteKeyA] || 0;
-      var countB = votes[voteKeyB] || 0;
-      var total = countA + countB;
-      var pctA = total > 0 ? (countA / total * 100) : 50;
-      var pctB = total > 0 ? (countB / total * 100) : 50;
-
-      var div = document.createElement('div');
-      div.className = 'matchup';
-      div.innerHTML =
-        '<div class="matchup-header">' + m.title + '</div>' +
-        '<div class="matchup-items">' +
-          '<div class="matchup-item">' +
-            '<div class="name">' + m.itemA + '</div>' +
-            '<div class="vote-count" id="count_' + voteKeyA + '">' + countA + ' votes</div>' +
-            '<button class="vote-btn gold" id="btn_' + voteKeyA + '" data-matchup="' + m.id + '" data-side="a">Vote</button>' +
-          '</div>' +
-          '<div class="matchup-vs">VS</div>' +
-          '<div class="matchup-item">' +
-            '<div class="name">' + m.itemB + '</div>' +
-            '<div class="vote-count" id="count_' + voteKeyB + '">' + countB + ' votes</div>' +
-            '<button class="vote-btn red" id="btn_' + voteKeyB + '" data-matchup="' + m.id + '" data-side="b">Vote</button>' +
-          '</div>' +
-        '</div>' +
-        '<div class="bar-row">' +
-          '<span class="bar-label">' + m.itemA.substring(0, 12) + '</span>' +
-          '<div class="bar-track"><div class="bar-fill gold" id="bar_' + voteKeyA + '" style="width:' + pctA + '%"></div></div>' +
-          '<span class="bar-pct" id="pct_' + voteKeyA + '">' + Math.round(pctA) + '%</span>' +
-        '</div>' +
-        '<div class="bar-row">' +
-          '<span class="bar-label">' + m.itemB.substring(0, 12) + '</span>' +
-          '<div class="bar-track"><div class="bar-fill red" id="bar_' + voteKeyB + '" style="width:' + pctB + '%"></div></div>' +
-          '<span class="bar-pct" id="pct_' + voteKeyB + '">' + Math.round(pctB) + '%</span>' +
-        '</div>';
-
-      container.appendChild(div);
-    });
-
-    container.addEventListener('click', function(e) {
-      var btn = e.target.closest('.vote-btn');
-      if (!btn || btn.disabled) return;
-
-      var matchupId = btn.getAttribute('data-matchup');
-      var side = btn.getAttribute('data-side');
-      var voteKey = matchupId + '_' + side;
-      var otherKey = matchupId + '_' + (side === 'a' ? 'b' : 'a');
-
-      if (!votes[voteKey + '_voted']) {
-        votes[voteKey] = (votes[voteKey] || 0) + 1;
-        votes[voteKey + '_voted'] = true;
-        saveVotes(battle.weekId, votes);
-
-        var countA = votes[matchupId + '_a'] || 0;
-        var countB = votes[matchupId + '_b'] || 0;
-        var total = countA + countB;
-        var pctA = total > 0 ? (countA / total * 100) : 50;
-        var pctB = total > 0 ? (countB / total * 100) : 50;
-
-        document.getElementById('count_' + matchupId + '_a').textContent = countA + ' votes';
-        document.getElementById('count_' + matchupId + '_b').textContent = countB + ' votes';
-        document.getElementById('bar_' + matchupId + '_a').style.width = pctA + '%';
-        document.getElementById('bar_' + matchupId + '_b').style.width = pctB + '%';
-        document.getElementById('pct_' + matchupId + '_a').textContent = Math.round(pctA) + '%';
-        document.getElementById('pct_' + matchupId + '_b').textContent = Math.round(pctB) + '%';
-
-        btn.textContent = '✓ Voted';
-        btn.classList.add('voted');
-        btn.disabled = true;
-        document.getElementById('count_' + voteKey).classList.add('highlight');
-        document.getElementById('bar_' + voteKey).classList.add('animate');
-
-        var matchupDiv = btn.closest('.matchup');
-        var allBtns = matchupDiv.querySelectorAll('.vote-btn');
-        for (var bi = 0; bi < allBtns.length; bi++) if (!allBtns[bi].disabled) allBtns[bi].disabled = true;
+    document.getElementById('carouselDots').addEventListener('click', function(e) {
+      var dot = e.target.closest('.carousel-dot');
+      if (dot) {
+        goToSlide(parseInt(dot.getAttribute('data-index')));
+        startAutoPlay();
       }
     });
+
+    var carousel = document.getElementById('carousel');
+    carousel.addEventListener('mouseenter', function() { isPaused = true });
+    carousel.addEventListener('mouseleave', function() { isPaused = false });
+    carousel.addEventListener('touchstart', function() { isPaused = true });
+    carousel.addEventListener('touchend', function() { isPaused = false; startAutoPlay() });
+
+    fetch('data/wall-of-fame.json?' + Date.now())
+      .then(function(r) { return r.json() })
+      .then(function(data) { renderCarousel(data) })
+      .catch(function() {
+        document.getElementById('carouselTrack').innerHTML = '<div class="empty-state">Could not load posts. Check back soon.</div>';
+      });
   </script>
 </body>
 </html>
